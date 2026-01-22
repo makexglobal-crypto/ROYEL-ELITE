@@ -757,83 +757,95 @@ document.getElementById('user-input').addEventListener("keypress", (e) => { if (
 
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ROYAL ELITE - MAKER X GLOBAL</title>
+    <style>
+        body { margin: 0; background: #000; color: white; font-family: sans-serif; text-align: center; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .box { background: #111; padding: 30px; border-radius: 20px; border: 1px solid #00d2ff; width: 80%; max-width: 350px; box-shadow: 0 0 20px rgba(0,210,255,0.2); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: #00d2ff; color: #000; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .switch { color: #888; font-size: 14px; margin-top: 15px; cursor: pointer; }
+        #status { color: #00ff88; font-size: 12px; margin-top: 10px; }
+    </style>
+</head>
+<body>
 
+    <div class="box" id="auth-box">
+        <h2 style="color:#00d2ff; margin-bottom:5px;">ROYAL ELITE</h2>
+        <p id="sub-text" style="font-size:12px; color:#555;">MAKER X GLOBAL CLOUD</p>
+        
+        <div id="login-fields">
+            <input type="tel" id="l-phone" placeholder="Phone Number">
+            <input type="password" id="l-pass" placeholder="Password">
+            <button onclick="handleLogin()">LOGIN</button>
+            <div class="switch" onclick="toggleAuth()">New User? Create Account</div>
+        </div>
 
-<script>
-// --- DATABASE CONFIGURATION ---
-const BIN_ID = "6972442143b1c97be941f71f";
-const MASTER_KEY = "$2a$10$YLrLX9tqu6jhe2/dIKMWruLHnLrjLsd32JComkYbINRmKrVkrw31.";
-const DB_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        <div id="signup-fields" style="display:none;">
+            <input type="text" id="s-name" placeholder="Full Name">
+            <input type="tel" id="s-phone" placeholder="Phone Number">
+            <input type="password" id="s-pass" placeholder="Create Password">
+            <button onclick="handleSignup()" style="background:#00ff88;">REGISTER</button>
+            <div class="switch" onclick="toggleAuth()">Already have account? Login</div>
+        </div>
+        
+        <div id="status">Ready to connect...</div>
+    </div>
 
-let currentPhone = "";
+    <script>
+        const BIN_ID = "697248ef43b1c97be94202a9";
+        const M_KEY = "$2a$10$YLrLX9tqu6jhe2/dIKMWruLHnLrjLsd32JComkYbINRmKrVkrw31.";
+        const URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-// 1. DATA LANEY KA FUNCTION (CLOUD SE)
-async function getCloudData() {
-    const res = await fetch(DB_URL, { headers: { "X-Master-Key": MASTER_KEY } });
-    const data = await res.json();
-    return data.record.users || [];
-}
-
-// 2. DATA SAVE KARNE KA FUNCTION (CLOUD PAR)
-async function saveCloudData(usersList) {
-    await fetch(DB_URL, {
-        method: 'PUT',
-        headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY },
-        body: JSON.stringify({ users: usersList })
-    });
-}
-
-// 3. SIGNUP (UPDATE)
-async function checkSignup() {
-    const p = document.getElementById('s-phone').value, 
-          n = document.getElementById('s-name').value, 
-          ps = document.getElementById('s-pass').value;
-
-    if(p.length !== 10) return showBanner("10 Digit Number Required", "error");
-    
-    showBanner("Creating Account Online...", "success");
-    let users = await getCloudData();
-    if(users.find(u => u.ph === p)) return showBanner("Number already registered", "error");
-
-    users.push({ ph: p, name: n, pass: ps, score: 0, pic: "" });
-    await saveCloudData(users);
-
-    showBanner("Welcome to ROYAL ELITE!", "success"); 
-    toggleAuth('login');
-}
-
-// 4. LOGIN (UPDATE)
-async function checkLogin() {
-    const p = document.getElementById('l-phone').value, 
-          ps = document.getElementById('l-pass').value;
-
-    showBanner("Verifying...", "success");
-    let users = await getCloudData();
-    const user = users.find(u => u.ph === p && u.pass === ps);
-
-    if(user) {
-        currentPhone = p;
-        // Design update karne ke liye purane functions call karein
-        document.getElementById('auth-section').style.display='none';
-        document.getElementById('main-nav').style.display='flex';
-        showScreen('dashboard');
-        updateUI();
-    } else {
-        showBanner("Invalid Phone or Password", "error");
-    }
-}
-
-// 5. SCORE SYNC (HAR 10 SECOND MEIN ONLINE SAVE HOGA)
-setInterval(async () => {
-    if(currentPhone) {
-        let s = parseInt(localStorage.getItem('score_'+currentPhone)) || 0;
-        let users = await getCloudData();
-        let idx = users.findIndex(u => u.ph === currentPhone);
-        if(idx !== -1 && users[idx].score < s) {
-            users[idx].score = s;
-            await saveCloudData(users);
-            console.log("Score Synced Online!");
+        function toggleAuth() {
+            const isLogin = document.getElementById('login-fields').style.display !== 'none';
+            document.getElementById('login-fields').style.display = isLogin ? 'none' : 'block';
+            document.getElementById('signup-fields').style.display = isLogin ? 'block' : 'none';
+            document.getElementById('sub-text').innerText = isLogin ? "CREATE YOUR ONLINE ID" : "MAKER X GLOBAL CLOUD";
         }
-    }
-}, 10000);
-</script>
+
+        async function handleSignup() {
+            const p = document.getElementById('s-phone').value, n = document.getElementById('s-name').value, ps = document.getElementById('s-pass').value;
+            if(p.length < 10 || !n || !ps) return alert("Please fill details correctly!");
+
+            document.getElementById('status').innerText = "Uploading to Cloud...";
+            try {
+                const res = await fetch(URL, { headers: { "X-Master-Key": M_KEY } });
+                const data = await res.json();
+                let users = data.record.users || [];
+
+                if(users.find(u => u.ph === p)) return alert("Number already exists!");
+
+                users.push({ ph: p, name: n, pass: ps, score: 0 });
+                await fetch(URL, {
+                    method: 'PUT',
+                    headers: { "Content-Type": "application/json", "X-Master-Key": M_KEY },
+                    body: JSON.stringify({ users: users })
+                });
+                alert("Success! Account Created Online.");
+                toggleAuth();
+            } catch(e) { alert("Cloud Error!"); }
+        }
+
+        async function handleLogin() {
+            const p = document.getElementById('l-phone').value, ps = document.getElementById('l-pass').value;
+            document.getElementById('status').innerText = "Verifying...";
+            try {
+                const res = await fetch(URL, { headers: { "X-Master-Key": M_KEY } });
+                const data = await res.json();
+                const user = data.record.users.find(u => u.ph === p && u.pass === ps);
+
+                if(user) {
+                    alert("Welcome " + user.name + "! Login Successful.");
+                    document.getElementById('auth-box').innerHTML = `<h2 style='color:#00d2ff'>Dashboard</h2><p>Hello ${user.name}</p><p>Cloud Sync Active ✅</p>`;
+                } else { alert("Wrong ID or Password!"); }
+            } catch(e) { alert("Login Error!"); }
+        }
+    </script>
+</body>
+</html>
+
