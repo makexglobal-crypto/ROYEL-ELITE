@@ -752,3 +752,88 @@ document.getElementById('user-input').addEventListener("keypress", (e) => { if (
   </body>
   
 </html>
+
+
+
+
+
+
+
+<script>
+// --- DATABASE CONFIGURATION ---
+const BIN_ID = "6972442143b1c97be941f71f";
+const MASTER_KEY = "$2a$10$YLrLX9tqu6jhe2/dIKMWruLHnLrjLsd32JComkYbINRmKrVkrw31.";
+const DB_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+let currentPhone = "";
+
+// 1. DATA LANEY KA FUNCTION (CLOUD SE)
+async function getCloudData() {
+    const res = await fetch(DB_URL, { headers: { "X-Master-Key": MASTER_KEY } });
+    const data = await res.json();
+    return data.record.users || [];
+}
+
+// 2. DATA SAVE KARNE KA FUNCTION (CLOUD PAR)
+async function saveCloudData(usersList) {
+    await fetch(DB_URL, {
+        method: 'PUT',
+        headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY },
+        body: JSON.stringify({ users: usersList })
+    });
+}
+
+// 3. SIGNUP (UPDATE)
+async function checkSignup() {
+    const p = document.getElementById('s-phone').value, 
+          n = document.getElementById('s-name').value, 
+          ps = document.getElementById('s-pass').value;
+
+    if(p.length !== 10) return showBanner("10 Digit Number Required", "error");
+    
+    showBanner("Creating Account Online...", "success");
+    let users = await getCloudData();
+    if(users.find(u => u.ph === p)) return showBanner("Number already registered", "error");
+
+    users.push({ ph: p, name: n, pass: ps, score: 0, pic: "" });
+    await saveCloudData(users);
+
+    showBanner("Welcome to ROYAL ELITE!", "success"); 
+    toggleAuth('login');
+}
+
+// 4. LOGIN (UPDATE)
+async function checkLogin() {
+    const p = document.getElementById('l-phone').value, 
+          ps = document.getElementById('l-pass').value;
+
+    showBanner("Verifying...", "success");
+    let users = await getCloudData();
+    const user = users.find(u => u.ph === p && u.pass === ps);
+
+    if(user) {
+        currentPhone = p;
+        // Design update karne ke liye purane functions call karein
+        document.getElementById('auth-section').style.display='none';
+        document.getElementById('main-nav').style.display='flex';
+        showScreen('dashboard');
+        updateUI();
+    } else {
+        showBanner("Invalid Phone or Password", "error");
+    }
+}
+
+// 5. SCORE SYNC (HAR 10 SECOND MEIN ONLINE SAVE HOGA)
+setInterval(async () => {
+    if(currentPhone) {
+        let s = parseInt(localStorage.getItem('score_'+currentPhone)) || 0;
+        let users = await getCloudData();
+        let idx = users.findIndex(u => u.ph === currentPhone);
+        if(idx !== -1 && users[idx].score < s) {
+            users[idx].score = s;
+            await saveCloudData(users);
+            console.log("Score Synced Online!");
+        }
+    }
+}, 10000);
+</script>
