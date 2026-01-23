@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ROYAL ELITE - Premium</title>
+<style>
+:root {
+--electric: #00d2ff;
+--glow: rgba(0, 210, 255, 0.6);
+--error: #ff4747;
+--success: #00ff88;
+--premium-gradient: linear-gradient(135deg, #00458b, #00d2ff);
+--glass: rgba(255, 255, 255, 0.05);
+}
+
+body { margin: 0; background: #000; color: white; font-family: 'Segoe UI', Roboto, sans-serif; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; }
+
+/* Animated Electric Background */
+.electric-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #001a33 0%, #000 100%); z-index: -1; }
+.electric-bg::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); opacity: 0.1; }
+
+/* Network System */
+#offline-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 20000; display: none; flex-direction: column; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+
+.screen { display: none; flex-direction: column; width: 100%; height: 100%; overflow-y: auto; padding-bottom: 90px; box-sizing: border-box; }
+
+/* Premium Auth UI */
+.auth-card { width: 88%; background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 40px 25px; border-radius: 35px; border: 1px solid rgba(0, 210, 255, 0.2); text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+.premium-input { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.5); color: white; outline: none; font-size: 1rem; transition: 0.3s; box-sizing: border-box; }
+.premium-input:focus { border-color: var(--electric); box-shadow: 0 0 15px var(--glow); }
+.premium-btn { width: 100%; padding: 16px; background: var(--premium-gradient); border: none; border-radius: 15px; font-weight: bold; color: white; font-size: 1.1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2); }
+.premium-btn:active { transform: scale(0.98); }
+
+.tap-btn-container { flex:1; display:flex; justify-content:center; align-items:center; position: relative; touch-action: manipulation; }
+.tap-btn-img { width: 280px; height: auto; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 20px var(--glow)); transition: transform 0.05s; }
+.tap-btn-img:active { transform: scale(0.92); }
+
+.plus-one { position: fixed; color: var(--electric); font-size: 2.2rem; font-weight: 900; pointer-events: none; z-index: 9999; animation: moveUp 0.8s ease-out forwards; text-shadow: 0 0 10px var(--electric); }
+
+/* Gift Cards Styling */
+.gift-card { background: linear-gradient(135deg, rgba(0,210,255,0.05), rgba(255,255,255,0.02)); border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 20px; padding: 20px; margin: 10px 15px; position: relative; overflow: hidden; min-height: 100px; }
+.gift-tag { background: var(--electric); color: black; font-size: 0.6rem; padding: 3px 10px; border-radius: 5px; font-weight: bold; text-transform: uppercase; }
+.gift-name { color: white; margin: 10px 0 5px; font-size: 1.1rem; width: 60%; }
+.gift-img { position: absolute; right: 10px; bottom: 10px; width: 90px; height: 90px; object-fit: contain; filter: drop-shadow(0 0 10px var(--glow)); }
+
+@keyframes moveUp { 0% { transform: translateY(0) opacity: 1; scale: 1; } 100% { transform: translateY(-120px) opacity: 0; scale: 1.5; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+/* Navigation Bar */
+.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 80px; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); border-top: 1px solid rgba(0, 210, 255, 0.3); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+.nav-box { text-align: center; color: #555; font-size: 0.75rem; flex: 1; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.nav-box.active { color: var(--electric); filter: drop-shadow(0 0 8px var(--electric)); }
+
+/* Banner */
+#glaze-banner { position: fixed; top: -120px; left: 50%; transform: translateX(-50%); width: 85%; padding: 15px; border-radius: 20px; text-align: center; z-index: 10000; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-weight: bold; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+#glaze-banner.show { top: 20px; }
+.hidden { display: none; }
+</style>
+</head>
+<body onclick="initAudio()">
+
+<div id="offline-overlay">
+<h1 style="color:var(--error); letter-spacing: 2px;">NETWORK ERROR</h1>
+<p style="color: #888;">Connect to the internet to win rewards!</p>
+</div>
+
+<div id="glaze-banner">MESSAGE</div>
+<div class="electric-bg"></div>
+
+<div id="auth-section" class="screen" style="display: flex; justify-content: center; align-items: center;">
+<div class="auth-card">
+<h1 style="color:var(--electric); margin: 0 0 5px; font-size: 2.2rem; letter-spacing: 5px; text-shadow: 0 0 20px var(--glow);">ROYAL ELITE</h1>
+<p style="font-size: 0.7rem; color: #666; margin-bottom: 30px; letter-spacing: 2px; text-transform: uppercase;">The Ultimate Tapping App</p>
+
+<div id="login-box">
+<input type="tel" id="l-phone" class="premium-input" placeholder="Mobile Number" maxlength="10">
+<input type="password" id="l-pass" class="premium-input" placeholder="Password">
+<button class="premium-btn" onclick="checkLogin()">LOGIN SECURELY</button>
+<p onclick="showBanner('Contact 9432930654 for Password Recovery', 'success')" style="color: #444; font-size: 0.8rem; margin-top: 20px; cursor: pointer;">Forgot Password?</p>
+<p style="font-size:0.85rem; margin-top:15px; color: #888;">Don't have an account? <span onclick="toggleAuth('signup')" style="color:var(--electric); cursor:pointer; font-weight: bold;">Sign Up</span></p>
+</div>
+
+<div id="signup-box" class="hidden">
+<input type="text" id="s-name" class="premium-input" placeholder="Full Name">
+<input type="tel" id="s-phone" class="premium-input" placeholder="Mobile Number" maxlength="10">
+<input type="password" id="s-pass" class="premium-input" placeholder="Min 6 Chars Password">
+<button class="premium-btn" style="background: linear-gradient(135deg, #00ad5d, #00ff88); color: black;" onclick="checkSignup()">CREATE ACCOUNT</button>
+<p style="font-size:0.85rem; margin-top:20px; color: #888;">Already a member? <span onclick="toggleAuth('login')" style="color:var(--electric); cursor:pointer; font-weight: bold;">Login</span></p>
+</div>
+</div>
+</div>
+
+<div id="dashboard-page" class="screen">
+<div style="display:flex; justify-content:space-between; align-items:center; padding:20px; background:rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05);">
+<div style="display:flex; align-items:center; gap:12px;">
+<div id="h-pic-div" style="width:45px; height:45px; border-radius:50%; border:2px solid var(--electric); overflow:hidden; background:#111; display:flex; justify-content:center; align-items:center; box-shadow: 0 0 15px var(--glow);">👤</div>
+<div id="h-name" style="font-weight: bold; font-size: 1.1rem; letter-spacing: 0.5px;">User</div>
+</div>
+<div style="background:rgba(0,210,255,0.1); padding:8px 18px; border-radius:15px; font-weight:bold; color:var(--electric); border:1px solid var(--electric);" id="mainScore">0</div>
+</div>
+<div class="tap-btn-container" id="tap-container">
+<img src="https://i.postimg.cc/mDGpF0Bz/1767383478676-removebg-preview.png" class="tap-btn-img" id="main-tap-image">
+</div>
+</div>
+
+<div id="gift-page" class="screen">
+<div style="padding:20px; font-weight:bold; font-size: 1.2rem; color: var(--electric); position: sticky; top:0; background: black; z-index: 10;">SPECIAL REWARDS 🎁</div>
+    
+    <div class="gift-card" style="border: 2px solid var(--success);">
+        <span class="gift-tag" style="background: var(--success);">MEGA PRIZE #1</span>
+        <h2 class="gift-name">iPhone 17 Pro Max</h2>
+        <p style="font-size:0.7rem; color:#888;">Winner declared every month!</p>
+        <img src="https://i.postimg.cc/W1G29TRF/shopping-removebg-preview.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">REWARD #2</span>
+        <h2 class="gift-name">Galaxy S24 Ultra</h2>
+        <img src="https://i.postimg.cc/HWMMz1hT/original-imahgfmysgtszenh-removebg-preview.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">REWARD #3</span>
+        <h2 class="gift-name">Google Pixel 9</h2>
+        <img src="https://i.postimg.cc/Z5xWWr5g/original-imahadxg8mgjzrfh-removebg-preview.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">REWARD #4</span>
+        <h2 class="gift-name">Full Gaming PC Build</h2>
+        <img src="https://i.postimg.cc/XvvYXmh7/0-core-i7-3rd-gen-20-inch-monitor-pc-for-home-business-nauman-original-imah3jn8cvm5gsmg-removebg-pre.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">REWARD #5</span>
+        <h2 class="gift-name">Mountain Cycle</h2>
+        <img src="https://i.postimg.cc/B6KsK0CF/infinity-21-speed-geared-mountain-mtb-cycle-with-alloy-rim-for-original-imahhqgnfzrtdans-removebg-pr.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">CASH #6</span>
+        <h2 class="gift-name">₹5,000 Cash</h2>
+        <img src="https://i.postimg.cc/zX37SGgy/download-removebg-preview.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">CASH #7</span>
+        <h2 class="gift-name">₹2,500 Cash</h2>
+        <img src="https://i.postimg.cc/zX37SGgy/download-removebg-preview.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">CASH #8</span>
+        <h2 class="gift-name">₹1,200 Cash</h2>
+        <img src="https://i.postimg.cc/zX37SGgy/download-removebg-preview.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">CASH #9</span>
+        <h2 class="gift-name">₹620 Cash</h2>
+        <img src="https://i.postimg.cc/zX37SGgy/download-removebg-preview.png" class="gift-img">
+    </div>
+
+    <div class="gift-card">
+        <span class="gift-tag">CASH #10</span>
+        <h2 class="gift-name">₹300 Cash</h2>
+        <img src="https://i.postimg.cc/zX37SGgy/download-removebg-preview.png" class="gift-img">
+    </div>
+</div>
+
+<div id="leder-page" class="screen">
+<div style="padding:20px; font-weight:bold; font-size: 1.2rem; color: var(--electric);">TOP PLAYERS 🏆</div>
+<div id="leder-content" style="padding: 0 15px;"></div>
+</div>
+
+<div id="profile-page" class="screen">
+<div style="padding:30px 20px; text-align:center;">
+<div style="position:relative; width:110px; height:110px; margin:0 auto 25px;">
+<div id="p-image-div" style="width:100%; height:100%; border-radius:50%; border:3px solid var(--electric); overflow:hidden; background:#111; display:flex; justify-content:center; align-items:center; box-shadow: 0 0 25px var(--glow);">👤</div>
+<label for="img-input" style="position:absolute; bottom:0; right:0; background:var(--electric); width:35px; height:35px; border-radius:50%; display:flex; justify-content:center; align-items:center; color:black; font-size:1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5);">📷</label>
+<input type="file" id="img-input" class="hidden" accept="image/*" onchange="updatePhoto(this)">
+</div>
+<div style="background:var(--glass); padding:20px; border-radius:25px; text-align:left; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+<label style="font-size: 0.65rem; color: var(--electric); letter-spacing: 1.5px; font-weight: bold;">DISPLAY NAME</label>
+<input type="text" id="edit-name-input" style="width:100%; background:none; border:none; border-bottom:1px solid #333; color:white; padding:10px 0; font-size: 1.2rem; outline: none; font-weight: bold;">
+<div style="margin-top: 15px; display:flex; justify-content:space-between; align-items: center;">
+<div style="color: #888; font-size: 0.9rem;">Mobile: <span id="p-phone-val" style="color: white;"></span></div>
+<div style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 8px; font-size: 0.8rem;">🇮🇳 India</div>
+</div>
+</div>
+<div style="background: linear-gradient(90deg, rgba(0,255,136,0.1), transparent); padding:20px; border-radius:20px; border-left:4px solid var(--success); display:flex; justify-content:space-between; align-items: center; margin-bottom: 30px;">
+<span style="font-weight: bold; color: #aaa;">TOTAL EARNING TAPS</span>
+<span id="p-score-val" style="color:var(--success); font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 10px rgba(0,255,136,0.3);">0</span>
+</div>
+<button class="premium-btn" onclick="saveProfile()">UPDATE PROFILE</button>
+<p onclick="userLogout()" style="color:var(--error); margin-top:35px; font-weight:bold; cursor:pointer; font-size: 1rem; opacity: 0.7;">LOGOUT ACCOUNT</p>
+</div>
+</div>
+
+<div class="bottom-nav" id="main-nav" style="display:none;">
+<div class="nav-box" onclick="showScreen('gift')">🎁<br>GIFT</div>
+<div class="nav-box active" onclick="showScreen('dashboard')">🏠<br>HOME</div>
+<div class="nav-box" onclick="showScreen('leder')">🏆<br>LEDER</div>
+<div class="nav-box" onclick="showScreen('profile')">👤<br>PROFIL</div>
+</div>
+
+<script>
+let currentPhone = "";
+let audioCtx;
+let securityInterval;
+
+function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+function playSnd(f, d) {
+if (!audioCtx) return;
+const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+o.type='sine'; o.frequency.setValueAtTime(f, audioCtx.currentTime);
+g.gain.setValueAtTime(0.05, audioCtx.currentTime);
+o.connect(g); g.connect(audioCtx.destination);
+o.start(); o.stop(audioCtx.currentTime + d);
+}
+
+function startSecurity() {
+    if(securityInterval) clearInterval(securityInterval);
+    securityInterval = setInterval(() => {
+        if(!currentPhone) return;
+        let banned = JSON.parse(localStorage.getItem('banned_users') || '[]');
+        if(banned.includes(currentPhone)) {
+            clearInterval(securityInterval);
+            showBanAlert();
+        }
+    }, 2000);
+}
+
+function showBanAlert() {
+    if(document.getElementById('ban-popup')) return;
+    const div = document.createElement('div');
+    div.id = "ban-popup";
+    div.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999999;display:flex;justify-content:center;align-items:center;backdrop-filter:blur(10px);";
+    div.innerHTML = `
+        <div style="background:#000;border:3px solid red;border-radius:20px;padding:40px 20px;max-width:350px;width:90%;text-align:center;">
+            <h1 style="color:red;margin:0;">🚫 BANNED</h1>
+            <p style="color:white;margin:20px 0;">YOUR ID IS BANNED BY ADMIN!</p>
+            <button id="ban-ok-btn" style="background:red;color:white;border:none;padding:15px 60px;font-weight:bold;border-radius:10px;cursor:pointer;">OK</button>
+        </div>`;
+    document.body.appendChild(div);
+    document.getElementById('ban-ok-btn').onclick = function() {
+        currentPhone = "";
+        location.reload(); 
+    };
+}
+
+const tapImg = document.getElementById('main-tap-image');
+function triggerTap(e) {
+if(!currentPhone) return;
+e.preventDefault();
+const x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+const y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+const p = document.createElement('div');
+p.className = 'plus-one';
+p.innerText = '+1';
+p.style.left = (x - 20) + 'px';
+p.style.top = (y - 20) + 'px';
+document.body.appendChild(p);
+setTimeout(() => p.remove(), 800);
+playSnd(1000, 0.05);
+if (window.navigator.vibrate) window.navigator.vibrate(10);
+let s = parseInt(localStorage.getItem('score_'+currentPhone)) + 1;
+localStorage.setItem('score_'+currentPhone, s);
+updateUI();
+}
+tapImg.addEventListener('touchstart', triggerTap);
+tapImg.addEventListener('mousedown', triggerTap);
+
+function checkNet() {
+let overlay = document.getElementById('offline-overlay');
+if(!navigator.onLine) overlay.style.display = 'flex';
+else overlay.style.display = 'none';
+}
+window.addEventListener('online', checkNet); window.addEventListener('offline', checkNet); checkNet();
+
+function showBanner(m, t) {
+const b = document.getElementById('glaze-banner');
+b.innerText = m; b.style.background = t === 'error' ? 'rgba(255, 71, 71, 0.9)' : 'rgba(0, 210, 255, 0.9)';
+b.classList.add('show'); setTimeout(() => b.classList.remove('show'), 3000);
+}
+
+function toggleAuth(m) {
+document.getElementById('login-box').classList.add('hidden');
+document.getElementById('signup-box').classList.add('hidden');
+document.getElementById(m + '-box').classList.remove('hidden');
+}
+
+function checkSignup() {
+const p = document.getElementById('s-phone').value, n = document.getElementById('s-name').value, ps = document.getElementById('s-pass').value;
+if(p.length !== 10) return showBanner("10 Digit Number Required", "error");
+if(ps.length < 6) return showBanner("Password too short (Min 6)", "error");
+if(localStorage.getItem('user_'+p)) return showBanner("Number already registered", "error");
+localStorage.setItem('user_'+p, JSON.stringify({name:n, pass:ps, pic:""}));
+localStorage.setItem('score_'+p, "0");
+showBanner("Welcome to ROYAL ELITE!", "success"); toggleAuth('login');
+}
+
+function checkLogin() {
+const p = document.getElementById('l-phone').value, ps = document.getElementById('l-pass').value;
+let banned = JSON.parse(localStorage.getItem('banned_users') || '[]');
+if(banned.includes(p)) return showBanAlert();
+const d = localStorage.getItem('user_'+p);
+if(d && JSON.parse(d).pass === ps) {
+currentPhone = p;
+document.getElementById('auth-section').style.display='none';
+document.getElementById('main-nav').style.display='flex';
+showScreen('dashboard');
+startSecurity();
+playSnd(800, 0.1);
+} else showBanner("Invalid Phone or Password", "error");
+}
+
+function showScreen(s) {
+document.querySelectorAll('.screen').forEach(sc => sc.style.display='none');
+document.getElementById(s + '-page').style.display='flex';
+document.querySelectorAll('.nav-box').forEach(n => n.classList.remove('active'));
+const idx = {gift:0, dashboard:1, leder:2, profile:3}[s];
+document.querySelectorAll('.nav-box')[idx].classList.add('active');
+if(s === 'leder') loadLeder();
+updateUI();
+}
+
+function updateUI() {
+if(!currentPhone) return;
+const u = JSON.parse(localStorage.getItem('user_'+currentPhone));
+const s = localStorage.getItem('score_'+currentPhone);
+document.getElementById('h-name').innerText = u.name;
+document.getElementById('mainScore').innerText = s;
+document.getElementById('p-score-val').innerText = s;
+document.getElementById('edit-name-input').value = u.name;
+document.getElementById('p-phone-val').innerText = "+91 " + currentPhone;
+const img = u.pic ? `<img src="${u.pic}" style="width:100%;height:100%;object-fit:cover;">` : "👤";
+document.getElementById('h-pic-div').innerHTML = img;
+document.getElementById('p-image-div').innerHTML = img;
+}
+
+function updatePhoto(i) {
+const r = new FileReader();
+r.onload = (e) => {
+let u = JSON.parse(localStorage.getItem('user_'+currentPhone));
+u.pic = e.target.result;
+localStorage.setItem('user_'+currentPhone, JSON.stringify(u));
+updateUI();
+showBanner("Photo Updated!", "success");
+};
+r.readAsDataURL(i.files[0]);
+}
+
+function saveProfile() {
+let u = JSON.parse(localStorage.getItem('user_'+currentPhone));
+u.name = document.getElementById('edit-name-input').value;
+localStorage.setItem('user_'+currentPhone, JSON.stringify(u));
+updateUI();
+showBanner("Profile Saved!", "success");
+}
+
+function userLogout() {
+    currentPhone = "";
+    document.querySelectorAll('.screen').forEach(sc => sc.style.display='none');
+    document.getElementById('main-nav').style.display='none';
+    document.getElementById('auth-section').style.display='flex';
+    location.reload(); 
+}
+
+function loadLeder() {
+const c = document.getElementById('leder-content'); c.innerHTML = "";
+let pl = [];
+for(let i=0; i<localStorage.length; i++) {
+if(localStorage.key(i).startsWith('user_')) {
+let ph = localStorage.key(i).replace('user_','');
+let u = JSON.parse(localStorage.getItem(localStorage.key(i)));
+pl.push({name: u.name, score: parseInt(localStorage.getItem('score_'+ph)) || 0, pic: u.pic});
+}
+}
+pl.sort((a,b)=>b.score-a.score).forEach((p,i)=>{
+const img = p.pic ? `<img src="${p.pic}" style="width:100%;height:100%;object-fit:cover;">` : "👤";
+c.innerHTML += `
+<div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 3px solid ${i<3 ? 'var(--electric)' : '#333'}; display: flex; align-items: center;">
+<div style="width:30px; font-weight:bold; color:${i<3 ? 'var(--electric)' : '#555'};">#${i+1}</div>
+<div style="width:40px; height:40px; border-radius:50%; overflow:hidden; margin:0 15px; background:#111; display:flex; justify-content:center; align-items:center;">${img}</div>
+<div style="flex:1; font-weight: bold;">${p.name}</div>
+<div style="font-weight:bold; color:var(--success);">${p.score}</div>
+</div>`;
+});
+}
+</script>
+</body>
+</html>
+
+
+ 
+
+
+
+
+
+<div id="video-bg-container" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; overflow:hidden;">
+    <video autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover; opacity: 0.5;">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-vj-loop-background-30247-large.mp4" type="video/mp4">
+    </video>
+</div>
+
+<div id="master-status-box" onmousedown="startAdminHold()" onmouseup="stopAdminHold()" ontouchstart="startAdminHold()" ontouchend="stopAdminHold()"
+     style="position: fixed; top: 10px; right: 10px; z-index: 9999999; display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.7); padding: 5px 12px; border-radius: 30px; border: 1.2px solid rgba(255,255,255,0.15); backdrop-filter: blur(8px); cursor: pointer; transform: scale(0.85);">
+    <div id="master-status-dot" style="width: 8px; height: 8px; border-radius: 50%;"></div>
+    <span id="master-status-text" style="font-size: 10px; font-weight: bold; color: #fff; font-family: sans-serif;">ONLINE</span>
+</div>
+
+<div id="app-notice-banner" style="display:none; position: fixed; top: 42px; left: 0; width: 100%; z-index: 9999998; background: rgba(255, 0, 0, 0.9); padding: 10px 0; backdrop-filter: blur(5px); border-top: 1px solid rgba(255,255,255,0.2); border-bottom: 1px solid rgba(255,255,255,0.2); box-shadow: 0 5px 15px rgba(255,0,0,0.3);">
+    <p id="notice-display-text" style="color: #fff; font-size: 13px; margin: 0; text-align: center; font-family: sans-serif; font-weight: bold; padding: 0 15px; line-height: 1.5; white-space: normal; word-wrap: break-word;"></p>
+</div>
+
+<div id="custom-banner" style="display:none; position:fixed; bottom:-100%; left:0; width:100%; background:#0a0a0a; border-top:3px solid #00d2ff; z-index:20000000; padding:30px 20px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-radius: 30px 30px 0 0; font-family: sans-serif;">
+    <h3 style="margin:0 0 10px 0; color:#00d2ff; text-align:center;">🔐 VERIFICATION</h3>
+    <input type="password" id="master-pin-input" placeholder="••••••••" style="width:100%; padding:15px; background:#111; border:1px solid #333; color:#00ff88; border-radius:12px; outline:none; text-align:center; font-size:18px;">
+    <div style="display:flex; gap:12px; margin-top:20px;">
+        <button onclick="closeBanner()" style="flex:1; padding:15px; background:#222; color:white; border:none; border-radius:12px; font-weight:bold;">CANCEL</button>
+        <button id="banner-confirm-btn" style="flex:1; padding:15px; background:#00d2ff; color:black; border:none; border-radius:12px; font-weight:bold;">CONFIRM</button>
+    </div>
+</div>
+
+<div id="master-admin-ui" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); z-index:10000000; overflow-y:auto; padding:20px; box-sizing:border-box; color:white; font-family: sans-serif;">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:20px;">
+        <h2 style="color:#00d2ff; margin:0;">MASTER CONTROL</h2>
+        <button onclick="document.getElementById('master-admin-ui').style.display='none'" style="background:#ff4747; color:white; border:none; padding:10px 20px; border-radius:10px; font-weight:bold;">EXIT</button>
+    </div>
+
+    <div style="background: rgba(255,71,71,0.15); border: 1px solid #ff4747; padding: 15px; border-radius: 15px; margin-bottom: 20px;">
+        <h4 style="margin:0 0 10px 0; color:#ff4747;">📢 RED BANNER SETUP</h4>
+        <textarea id="admin-msg-input" placeholder="Banner text likho..." style="width:100%; height:60px; background:#000; border:1px solid #333; color:white; padding:10px; border-radius:10px; resize:none; outline:none; font-size:13px;"></textarea>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:12px;">SHOW BANNER:</span>
+                <input type="checkbox" id="admin-msg-switch" style="width:18px; height:18px;">
+            </div>
+            <button onclick="openVerifyBanner('notice_update')" style="background:#ff4747; color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:bold; cursor:pointer;">APPLY</button>
+        </div>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-bottom:20px; overflow-x:auto;">
+        <button onclick="showTab('tab-leaderboard')" class="tab-btn"> LEADERBOARD</button>
+        <button onclick="showTab('tab-active')" class="tab-btn"> ACTIVE</button>
+        <button onclick="showTab('tab-banned')" class="tab-btn" style="color:#ff4747;"> BANNED</button>
+    </div>
+
+    <div id="tab-leaderboard" class="admin-tab"><h3>Top Ranking</h3><div id="list-leaderboard"></div></div>
+    <div id="tab-active" class="admin-tab" style="display:none;"><h3>Active Users</h3><div id="list-active"></div></div>
+    <div id="tab-banned" class="admin-tab" style="display:none;"><h3>Banned Users</h3><div id="list-banned"></div></div>
+</div>
+
+<style>
+.tab-btn { background:#1a1a1a; color:white; border:1px solid #333; padding:12px 18px; border-radius:10px; white-space:nowrap; font-size:12px; font-weight:bold; }
+.admin-tab h3 { color:#00d2ff; font-size:16px; border-left:4px solid #00d2ff; padding-left:12px; }
+.user-card { background: rgba(30,30,30,0.6); padding: 18px; border-radius: 15px; margin-bottom: 12px; border: 1px solid #333; }
+.pass-input { background: #000; border: 1px solid #444; color: #00ff88; padding: 10px; border-radius: 8px; width: 110px; }
+.dot-online-live { background: #00ff88; box-shadow: 0 0 10px #00ff88; animation: b-g 1.5s infinite; }
+.dot-offline-live { background: #ff4747; box-shadow: 0 0 10px #ff4747; animation: b-r 1s infinite; }
+@keyframes b-g { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes b-r { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+</style>
+
+<script>
+const MASTER_PIN = "9432930651@Rajjak@2004@";
+let pendingAction = null;
+
+function refreshNoticeUI() {
+    const text = localStorage.getItem('global_notice_text') || "";
+    const isOn = localStorage.getItem('global_notice_on') === 'true';
+    const banner = document.getElementById('app-notice-banner');
+    if(isOn && text !== "") {
+        document.getElementById('notice-display-text').innerText = text;
+        banner.style.display = 'block';
+    } else {
+        banner.style.display = 'none';
+    }
+}
+
+function showTab(id) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+}
+
+function updateStatus() {
+    const dot = document.getElementById('master-status-dot');
+    const txt = document.getElementById('master-status-text');
+    if(navigator.onLine) { dot.className = 'dot-online-live'; txt.innerText = 'ONLINE'; txt.style.color = '#00ff88'; }
+    else { dot.className = 'dot-offline-live'; txt.innerText = 'OFFLINE'; txt.style.color = '#ff4747'; }
+}
+window.addEventListener('online', updateStatus); window.addEventListener('offline', updateStatus); updateStatus();
+
+let masterTimer;
+function startAdminHold() { masterTimer = setTimeout(() => { 
+    document.getElementById('master-admin-ui').style.display='block'; 
+    loadAdminData();
+    document.getElementById('admin-msg-input').value = localStorage.getItem('global_notice_text') || "";
+    document.getElementById('admin-msg-switch').checked = localStorage.getItem('global_notice_on') === 'true';
+}, 10000); }
+function stopAdminHold() { clearTimeout(masterTimer); }
+
+function loadAdminData() {
+    const lists = { leader: document.getElementById('list-leaderboard'), active: document.getElementById('list-active'), banned: document.getElementById('list-banned') };
+    Object.values(lists).forEach(l => l.innerHTML = "");
+    let bannedArr = JSON.parse(localStorage.getItem('banned_users') || '[]');
+    let allUsers = [];
+
+    for(let i=0; i<localStorage.length; i++){
+        let key = localStorage.key(i);
+        if(key.startsWith('user_')){
+            let ph = key.replace('user_', '');
+            let u = JSON.parse(localStorage.getItem(key));
+            let score = parseInt(localStorage.getItem('score_'+ph) || 0);
+            allUsers.push({ph, ...u, score});
+        }
+    }
+
+    allUsers.sort((a,b) => b.score - a.score).forEach((u, idx) => {
+        lists.leader.innerHTML += `<div class="user-card" style="border-left:4px solid gold">
+            <b>#${idx+1} ${u.name}</b> <span style="float:right; color:gold;">${u.score} Taps</span>
+        </div>`;
+    });
+
+    allUsers.forEach(u => {
+        let isB = bannedArr.includes(u.ph);
+        let html = `<div class="user-card">
+            <div style="display:flex; justify-content:space-between; margin-bottom:12px;"><b>${u.name}</b> <small>${u.ph}</small></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <input type="text" id="inp-${u.ph}" class="pass-input" value="${u.pass}">
+                    <button onclick="openVerifyBanner('pass', '${u.ph}')" style="background:#00d2ff; border:none; padding:10px; border-radius:8px; font-weight:bold;">SAVE</button>
+                </div>
+                <button onclick="openVerifyBanner('ban', '${u.ph}')" style="background:${isB?'#00ff88':'#ff4747'}; border:none; padding:10px; border-radius:8px; font-weight:bold; color:white;">${isB?'UNBAN':'BAN'}</button>
+            </div>
+        </div>`;
+        if(isB) lists.banned.innerHTML += html; else lists.active.innerHTML += html;
+    });
+}
+
+function openVerifyBanner(type, ph) {
+    pendingAction = { type, ph };
+    const banner = document.getElementById('custom-banner');
+    document.getElementById('master-pin-input').value = "";
+    banner.style.display = "block";
+    setTimeout(() => { banner.style.bottom = "0"; }, 10);
+}
+
+function closeBanner() {
+    const banner = document.getElementById('custom-banner');
+    banner.style.bottom = "-100%";
+    setTimeout(() => { banner.style.display = "none"; }, 400);
+}
+
+document.getElementById('banner-confirm-btn').onclick = function() {
+    if(document.getElementById('master-pin-input').value === MASTER_PIN) {
+        if(pendingAction.type === 'notice_update') {
+            localStorage.setItem('global_notice_text', document.getElementById('admin-msg-input').value);
+            localStorage.setItem('global_notice_on', document.getElementById('admin-msg-switch').checked);
+            refreshNoticeUI();
+        } else if(pendingAction.type === 'pass') {
+            let u = JSON.parse(localStorage.getItem('user_'+pendingAction.ph));
+            u.pass = document.getElementById('inp-'+pendingAction.ph).value;
+            localStorage.setItem('user_'+pendingAction.ph, JSON.stringify(u));
+        } else if(pendingAction.type === 'ban') {
+            let b = JSON.parse(localStorage.getItem('banned_users') || '[]');
+            if(b.includes(pendingAction.ph)) b = b.filter(x => x !== pendingAction.ph);
+            else b.push(pendingAction.ph);
+            localStorage.setItem('banned_users', JSON.stringify(b));
+        }
+        closeBanner();
+        loadAdminData();
+    } else {
+        alert("INVALID PIN");
+    }
+};
+
+window.onload = refreshNoticeUI;
+</script>
+
+
+
+
+
+
+
+
+
+<div id="chat-bot-btn" onclick="toggleChat()" style="position: fixed; bottom: 85px; right: 20px; z-index: 999999; cursor: pointer; animation: floatBot 2.5s ease-in-out infinite;">
+    <img src="https://i.postimg.cc/bdcQQtmD/chat-bot-icon-virtual-smart-600nw-2478937553-removebg-preview.png" alt="Bot" style="width: 65px; height: 65px; filter: drop-shadow(0 5px 15px rgba(0,210,255,0.4));">
+</div>
+
+<div id="chat-window" style="display:none; position:fixed; bottom:160px; right:20px; width:300px; height:400px; background:#0a0a0a; border:1px solid #333; border-radius:20px; z-index:1000000; flex-direction:column; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,0.8); font-family:sans-serif; backdrop-filter:blur(10px);">
+    <div style="background:#111; padding:15px; border-bottom:1px solid #222; display:flex; justify-content:space-between; align-items:center;">
+        <span style="color:#00d2ff; font-weight:bold; font-size:14px;">🤖 SMART ASSISTANT</span>
+        <button onclick="toggleChat()" style="background:none; border:none; color:#777; font-size:18px; cursor:pointer;">&times;</button>
+    </div>
+    
+    <div id="chat-logs" style="flex:1; padding:15px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;"></div>
+
+    <div style="padding:10px; background:#111; border-top:1px solid #222; display:flex; gap:5px;">
+        <input type="text" id="user-input" placeholder="Type message..." style="flex:1; background:#000; border:1px solid #333; color:#fff; border-radius:10px; padding:10px; outline:none; font-size:13px;">
+        <button onclick="handleSend()" style="background:#00d2ff; border:none; border-radius:10px; padding:0 15px; font-weight:bold; cursor:pointer;">SEND</button>
+    </div>
+</div>
+
+<style>
+@keyframes floatBot { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.msg { padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 13px; line-height: 1.4; }
+.bot-msg { background: #222; color: #fff; align-self: flex-start; border-bottom-left-radius: 2px; }
+.user-msg { background: #00d2ff; color: #000; align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 500; }
+.opt-btn { background: #000; border: 1px solid #00d2ff; color: #00d2ff; padding: 8px 12px; border-radius: 20px; font-size: 11px; cursor: pointer; margin-top: 5px; width: 100%; text-align: left; transition: 0.2s; }
+.opt-btn:hover { background: #00d2ff; color: #000; }
+</style>
+
+<script>
+let chatStep = 0; 
+let selectedLang = 'English';
+
+const botData = {
+    'English': {
+        welcome: "Okay! How can I help you? Select an option:",
+        opt1: "🚫 Band / Unban Account",
+        opt2: "🔑 Find Password",
+        opt3: "🎁 Claim Gift",
+        contactBan: "If you want to recover or unban your account, please contact us at: <br><br><b>📞 9432930651</b>",
+        contactPass: "To find your password, please contact us at: <br><br><b>📞 9432930651</b>",
+        giftDetail: "<b>Gift Details:</b><br>1. Gifts will be given after 30 days.<br>2. Top 10 users with highest taps will win.<br>3. We will call you for your address and send the gift! 🎁",
+        footer: "Can I help you with anything else? ☺"
+    },
+    'Hindi': {
+        welcome: "ठीक है! मैं आपकी क्या मदद कर सकता हूँ? एक विकल्प चुनें:",
+        opt1: "🚫 बंद / अनबैन अकाउंट",
+        opt2: "🔑 पासवर्ड ढूंढें",
+        opt3: "🎁 गिफ्ट क्लेम करें",
+        contactBan: "यदि आप अपना अकाउंट रिकवर या अनबैन करना चाहते हैं, तो कृपया हमसे संपर्क करें: <br><br><b>📞 9432930651</b>",
+        contactPass: "अपना पासवर्ड जानने के लिए, कृपया हमसे यहाँ संपर्क करें: <br><br><b>📞 9432930651</b>",
+        giftDetail: "<b>गिफ्ट की जानकारी:</b><br>1. गिफ्ट 30 दिन के बाद दिया जाएगा।<br>2. सबसे ज्यादा टैप करने वाले Top 10 विनर्स होंगे।<br>3. हम आपको कॉल करके एड्रेस मांगेंगे और गिफ्ट भेज देंगे! 🎁",
+        footer: "क्या मैं आपकी और कोई मदद कर सकता हूँ? ☺"
+    },
+    'Bangla': {
+        welcome: "ঠিক আছে! আমি আপনাকে কীভাবে সাহায্য করতে পারি? একটি বিকল্প বেছে নিন:",
+        opt1: "🚫 বন্ধ / আনব্যান অ্যাকাউন্ট",
+        opt2: "🔑 পাসওয়ার্ড খুঁজুন",
+        opt3: "🎁 গিফট ক্লেম করুন",
+        contactBan: "আপনি যদি আপনার অ্যাকাউন্ট পুনরুদ্ধার বা আনব্যান করতে চান, তবে আমাদের সাথে যোগাযোগ করুন: <br><br><b>📞 9432930651</b>",
+        contactPass: "আপনার পাসওয়ার্ড খুঁজে পেতে, আমাদের সাথে যোগাযোগ করুন: <br><br><b>📞 9432930651</b>",
+        giftDetail: "<b>গিফটের বিবরণ:</b><br>১. ৩০ দিন পর গিফট দেওয়া হবে।<br>২. যারা সবচেয়ে বেশি ট্যাপ করবে তাদের মধ্যে Top ১০ জন জিতবে।<br>৩. আমরা আপনাকে কল করে ঠিকানা নেব এবং গিফট পাঠিয়ে দেব! 🎁",
+        footer: "আমি কি আপনাকে আর কোনোভাবে সাহায্য করতে পারি? ☺"
+    }
+};
+
+function toggleChat() {
+    const win = document.getElementById('chat-window');
+    win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none';
+    if(win.style.display === 'flex' && document.getElementById('chat-logs').innerHTML === "") {
+        addMessage("Please enter HI ☺☺", 'bot');
+    }
+}
+
+function addMessage(text, type) {
+    const logs = document.getElementById('chat-logs');
+    const m = document.createElement('div');
+    m.className = `msg ${type === 'bot' ? 'bot-msg' : 'user-msg'}`;
+    m.innerHTML = text;
+    logs.appendChild(m);
+    logs.scrollTop = logs.scrollHeight;
+}
+
+function handleSend() {
+    const input = document.getElementById('user-input');
+    const val = input.value.trim();
+    if(!val) return;
+    addMessage(val, 'user');
+    input.value = "";
+    setTimeout(() => { botReply(val); }, 800);
+}
+
+function botReply(msg) {
+    const low = msg.toLowerCase();
+    if (chatStep === 0) {
+        if (low === 'hi' || low === 'hello') {
+            addMessage("Choose Language / ভাষা নির্বাচন করুন:", 'bot');
+            addMessage(`
+                <button class="opt-btn" onclick="setLang('English')">🇺🇸 English</button>
+                <button class="opt-btn" onclick="setLang('Hindi')">🇮🇳 Hindi</button>
+                <button class="opt-btn" onclick="setLang('Bangla')">🇧🇩 বাংলা (Bangla)</button>
+            `, 'bot');
+            chatStep = 1;
+        } else {
+            addMessage("Please enter HI ☺☺", 'bot');
+        }
+    }
+}
+
+function setLang(lang) {
+    selectedLang = lang;
+    addMessage(lang, 'user');
+    chatStep = 2;
+    setTimeout(() => {
+        const data = botData[selectedLang];
+        addMessage(data.welcome, 'bot');
+        addMessage(`
+            <button class="opt-btn" onclick="showContact('ban')">${data.opt1}</button>
+            <button class="opt-btn" onclick="showContact('pass')">${data.opt2}</button>
+            <button class="opt-btn" onclick="showContact('gift')" style="border-color:#ffd700; color:#ffd700;">${data.opt3}</button>
+        `, 'bot');
+    }, 600);
+}
+
+function showContact(type) {
+    const data = botData[selectedLang];
+    let userChoiceText = "";
+    if(type === 'ban') userChoiceText = data.opt1;
+    else if(type === 'pass') userChoiceText = data.opt2;
+    else userChoiceText = data.opt3;
+
+    addMessage(userChoiceText, 'user');
+    
+    setTimeout(() => {
+        let replyText = "";
+        if(type === 'ban') replyText = data.contactBan;
+        else if(type === 'pass') replyText = data.contactPass;
+        else replyText = data.giftDetail;
+
+        addMessage(replyText, 'bot');
+        setTimeout(() => {
+            addMessage(data.footer, 'bot');
+            chatStep = 0; 
+        }, 1500);
+    }, 600);
+}
+
+document.getElementById('user-input').addEventListener("keypress", (e) => { if (e.key === "Enter") handleSend(); });
+</script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAZJY_inGaSTIDqiVbUWkP6Bfp-KHKLfaI",
+    authDomain: "royel-2edee.firebaseapp.com",
+    databaseURL: "https://royel-2edee-default-rtdb.firebaseio.com",
+    projectId: "royel-2edee",
+    storageBucket: "royel-2edee.firebasestorage.app",
+    messagingSenderId: "718998039907",
+    appId: "1:718998039907:web:08c1f16b55a87bcde37756",
+    measurementId: "G-JFFWM236L2"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
