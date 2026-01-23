@@ -749,14 +749,37 @@ document.getElementById('user-input').addEventListener("keypress", (e) => { if (
 </script>
     <script  src="./script.js"></script>
 
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+      // 2. Database Connection (Aapki Key)
+      const firebaseConfig = {
+        apiKey: "AIzaSyAZJY_inGaSTIDqiVbUWkP6Bfp-KHKLfaI",
+        authDomain: "royel-2edee.firebaseapp.com",
+        databaseURL: "https://royel-2edee-default-rtdb.firebaseio.com",
+        projectId: "royel-2edee",
+        storageBucket: "royel-2edee.firebasestorage.app",
+        messagingSenderId: "718998039907",
+        appId: "1:718998039907:web:1bc768333aa41142e37756"
+      };
+
+      // Firebase chalu karna
+      if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+      }
+      var db = firebase.database();
+
+      // 3. Ye function data bhejega
+      function saveChat(u, b) {
+        if(db) {
+          db.ref('CHAT_DATA').push({
+            user_msg: u,
+            bot_reply: b,
+            time: new Date().toLocaleString()
+          });
+        }
+      }
+    </script>
   </body>
-  
 </html>
-
-
-{
-  "rules": {
-    ".read": "now < 1771612200000",  // 2026-2-21
-    ".write": "now < 1771612200000",  // 2026-2-21
-  }
-}
